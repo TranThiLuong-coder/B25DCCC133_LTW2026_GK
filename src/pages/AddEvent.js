@@ -2,31 +2,41 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const AddEvent = ({ onAdd }) => {
-  const [name, setName] = useState("");
-  const [location, setLocation] = useState("");
-  const [date, setDate] = useState("");
-  const [capacity, setCapacity] = useState("");
-  const [message, setMessage] = useState("");
-  const navigate = useNavigate();
+const [name, setName] = useState("");
+const [location, setLocation] = useState("");
+const [date, setDate] = useState("");
+const [capacity, setCapacity] = useState("");
+const [message, setMessage] = useState("");
+const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+const handleSubmit = (e) => {
     e.preventDefault();
 
     if (!name.trim() || !location.trim() || !date || !capacity) {
-      setMessage("Vui lòng nhập đầy đủ thông tin");
-      return;
+        setMessage("Vui lòng nhập đầy đủ thông tin");
+        return;
+    }
+
+    const capacityNumber = Number(capacity);
+    if (
+        !Number.isInteger(capacityNumber) ||
+        capacityNumber < 10 ||
+        capacityNumber > 1000
+    ) {
+        setMessage("Sức chứa phải từ 10 đến 1000");
+        return;
     }
 
     onAdd({
-      name: name.trim(),
-      location: location.trim(),
-      date,
-      capacity: Number(capacity),
+        name: name.trim(),
+        location: location.trim(),
+        date,
+        capacity: capacityNumber,
     });
     navigate("/events", { replace: true });
-  };
+};
 
-  return (
+return (
     <form onSubmit={handleSubmit}>
       <div>
         <label htmlFor="name">Tên sự kiện</label>

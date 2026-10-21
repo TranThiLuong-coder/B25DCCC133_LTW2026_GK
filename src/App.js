@@ -12,7 +12,15 @@ const App = () => {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+
   useEffect(() => {
+    const saved = localStorage.getItem("gk_events");
+    if (saved) {
+      setEvents(JSON.parse(saved));
+      setLoading(false);
+      return;
+    }
+
     const controller = new AbortController();
 
     axios
@@ -30,7 +38,13 @@ const App = () => {
     return () => controller.abort();
   }, []);
 
-  const handleRegister = (id) => {         
+  useEffect(() => {
+    if (!loading && !error) {
+      localStorage.setItem("gk_events", JSON.stringify(events));
+    }
+  }, [events, loading, error]);
+
+  const handleRegister = (id) => {
     setEvents(
       events.map((e) =>
         e.id === id && e.registered < e.capacity
@@ -45,11 +59,11 @@ const App = () => {
   };
 
   const handleAdd = (data) => {
-  const newId = events.reduce((max, e) => Math.max(max, e.id), 0) + 1;
-  setEvents([...events, { id: newId, ...data, registered: 0 }]);
+    const newId = events.reduce((max, e) => Math.max(max, e.id), 0) + 1;
+    setEvents([...events, { id: newId, ...data, registered: 0 }]);
   };
 
-  return (                                 
+  return (
     <Routes>
       <Route path="/" element={<Layout loading={loading} error={error} />}>
         <Route index element={<Home events={events} />} />
