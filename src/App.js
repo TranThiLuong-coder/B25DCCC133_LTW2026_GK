@@ -44,7 +44,12 @@ const App = () => {
     setEvents(events.filter((e) => e.id !== id));
   };
 
-  return (                                 // return số 2 (giao diện của App)
+  const handleAdd = (data) => {
+  const newId = events.reduce((max, e) => Math.max(max, e.id), 0) + 1;
+  setEvents([...events, { id: newId, ...data, registered: 0 }]);
+  };
+
+  return (                                 
     <Routes>
       <Route path="/" element={<Layout loading={loading} error={error} />}>
         <Route index element={<Home />} />
@@ -58,7 +63,7 @@ const App = () => {
             />
           }
         />
-        <Route path="events/new" element={<AddEvent />} />
+        <Route path="events/new" element={<AddEvent onAdd={handleAdd} />} />
         <Route path="events/:id" element={<EventDetail />} />
       </Route>
     </Routes>
