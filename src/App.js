@@ -64,7 +64,7 @@ const App = () => {
           }
         />
         <Route path="events/new" element={<AddEvent onAdd={handleAdd} />} />
-        <Route path="events/:id" element={<EventDetail />} />
+        <Route path="events/:id" element={<EventDetail events={events} />} />
       </Route>
     </Routes>
   );
